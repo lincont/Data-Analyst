@@ -2,6 +2,10 @@
 Enron Emails Machine Learning Python/final_project/emails_by_address/
 *.pkl
 
+# remove visual studio code editor files
+.vscode/
+*/.vscode/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
