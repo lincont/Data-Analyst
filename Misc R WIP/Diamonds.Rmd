@@ -1,0 +1,201 @@
+---
+title: "Diamonds"
+author: "Tania Lincoln"
+date: "September 3, 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+This is an R Markdown document to examine diamond prices.
+
+
+## Load our library and dataset
+```{r diamonds}
+library(ggplot2)
+data(diamonds)
+```
+
+## look at common stats for diamonds
+```{r}
+summary(diamonds)
+```
+
+## Explore prices, histogram
+```{r}
+qplot(x=price, data=diamonds, binwidth = 1000)
+```
+
+## show a summary for price
+```{r}
+summary(diamonds$price)
+```
+
+## Number of entries with price >= 15000
+```{r}
+length(which(diamonds$price >= 15000))
+```
+
+
+## DIg into the highest price
+```{r}
+qplot(x=price, data=diamonds, binwidth = 1, xlim = c(250, 2000))
+qplot(x=price, data=diamonds, binwidth = 1, xlim = c(250, 1000))
+```
+
+
+# prices by cut
+```{r}
+qplot(x=price, data=diamonds) +
+  facet_wrap(~cut)
+```
+
+
+## how to find min, max, median price, sliced by cut
+```{r}
+by(diamonds$price, diamonds$cut, min)
+by(diamonds$price, diamonds$cut, max)
+by(diamonds$price, diamonds$cut, median)
+
+```
+
+
+## show price per carat for each cut
+```{r}
+qplot(x=price/carat, data=diamonds) +
+  facet_wrap(~cut)
+```
+
+## Box Plots
+```{r}
+qplot (x=cut, y = price,
+       data = diamonds, 
+       geom = 'boxplot') +
+  coord_cartesian(ylim = c(0, 7000))
+```
+
+
+```{r}
+qplot (x=color, y = price,
+       data = diamonds, 
+       geom = 'boxplot') +
+  coord_cartesian(ylim = c(0, 8000))
+
+by(diamonds$price, diamonds$color, summary)
+
+by(diamonds$price, diamonds$color, IQR)
+```
+
+```{r}
+qplot (x=clarity, y = price,
+       data = diamonds, 
+       geom = 'boxplot') +
+  coord_cartesian(ylim = c(0, 6500))
+```
+
+```{r}
+qplot (x=color, y = price/carat,
+       data = diamonds, 
+       geom = 'boxplot') +
+  coord_cartesian(ylim = c(2400, 5800))
+
+```
+
+```{r}
+table(diamonds$carat)
+#carat, data=diamonds)
+```
+
+
+```{r}
+ggplot(aes(x=diamonds$price, y=diamonds$x), data = diamonds) +
+  geom_point()
+```
+
+```{r}
+cor.test(x=diamonds$price, y=diamonds$x, method = 'pearson')
+cor.test(x=diamonds$price, y=diamonds$y, method = 'pearson')
+cor.test(x=diamonds$price, y=diamonds$z, method = 'pearson')
+```
+
+```{r}
+ggplot(aes(x=diamonds$price, y=diamonds$depth), data = diamonds) +
+  geom_point()
+```
+
+```{r}
+cor.test(x=diamonds$price, y=diamonds$depth, method = 'pearson')
+```
+
+```{r}
+ggplot(aes(x=carat, y=price), data=diamonds) +
+  geom_point()
+```
+
+```{r}
+ggplot(aes(x=carat, y=price), data=diamonds) +
+  geom_point() +
+  ylim(0, quantile(diamonds$price, .90))
+```
+
+
+```{r}
+diamonds$volume <- (diamonds$x * diamonds$y * diamonds$z)
+```
+
+
+```{r}
+ggplot(aes(x=volume, y=price), data=diamonds) +
+  geom_point()
+```
+
+```{r}
+cor.test(x=diamonds$volume, y=diamonds$price)
+```
+
+```{r}
+diamonds_subset <- subset(diamonds, diamonds$volume > 0 & diamonds$volume <= 800)
+```
+
+```{r}
+ggplot(aes(x=price, y = volume), data = diamonds_subset) +
+  geom_point(alpha = .1) + 
+  stat_smooth(method ='lm')
+```
+
+```{r}
+library(dplyr)
+```
+
+
+```{r}
+diamonds.diamonds_by_clarity <- diamonds %>%
+group_by(diamonds$clarity) %>%
+summarise(mean_price = mean(diamonds$price), median_price = median(diamonds$price), min_price = min(diamonds$price), max_price = max(diamonds$price), n=n())
+```
+
+
+```{r}
+diamonds.diamonds_by_clarity
+```
+
+```{r}
+data(diamonds)
+library(dplyr)
+
+diamonds_by_clarity <- group_by(diamonds, clarity)
+diamonds_mp_by_clarity <- summarise(diamonds_by_clarity, mean_price = mean(price))
+
+diamonds_by_color <- group_by(diamonds, color)
+diamonds_mp_by_color <- summarise(diamonds_by_color, mean_price = mean(price))
+```
+
+
+```{r}
+ggplot(aes(x=clarity, y=mean_price), data = diamonds_mp_by_clarity) +
+  geom_bar()
+```
+
