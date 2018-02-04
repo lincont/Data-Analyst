@@ -1,6 +1,7 @@
 # Project specific big data files
 Enron Emails Machine Learning Python/final_project/emails_by_address/
 ud120-projects-master/maildir/
+ud120-projects-master/final_project/
 
 *.pkl
 *.tgz
