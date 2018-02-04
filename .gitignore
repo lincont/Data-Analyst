@@ -1,3 +1,7 @@
+# Project specific big data files
+Enron Emails Machine Learning Python/final_project/emails_by_address/
+*.pkl
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
