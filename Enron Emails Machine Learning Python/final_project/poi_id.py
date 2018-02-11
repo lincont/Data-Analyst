@@ -11,10 +11,6 @@ import matplotlib.pyplot as plt
 import matplotlib as mpl
 import numpy as np
 
-x = np.linspace(0, 20, 100)
-plt.plot(x, np.sin(x))
-plt.show()
-
 
 ### Task 1: Select what features you'll use.
 ### features_list is a list of strings, each of which is a feature name.
