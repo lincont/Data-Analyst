@@ -22,7 +22,10 @@ with open("final_project_dataset.pkl", "r") as data_file:
     data_dict = pickle.load(data_file)
 
 ### Remove outliers
-
+### from the EDA in the Jupyter notebook,
+### we are removing TOTAL and The travel agency in the park
+data_dict.pop('TOTAL')
+data_dict.pop('THE TRAVEL AGENCY IN THE PARK')
 
 ### Task 3: Create new feature(s)
 ### Store to my_dataset for easy export below.
