@@ -119,15 +119,24 @@ if __name__ == "__main__":
 
     ### Using the initial model candidate research
     ### from the Jupyter notebook, I've selected
-    ### KNeighbors, SVC, and RandomForest for more investigation
+    ### Logistic Regression, KNeighbors, SVC, and RandomForest
     
-    ### Try various models
+    ### Try various models ###
+
+    ### RobustScaler is used as a normalization method
+    ### Each of the features have different units
+    ### and have dramatic outliers
     scalers = RobustScaler()
 
+
+    ### Experimenting with two feature reduction methods
+    ### KBest scores the features and take the top K
+    ### PCA to reduce noise and reduce dimensions without fidelity loss
+    ### There are 14 features, set the k and n to numbers < 14
     select_reduction = []
 
     pca_parameters = [
-        {'reducers__n_components': [1, 2, 3, 4, 5]},]
+        {'reducers__n_components': [1, 2, 3, 4, 5, 7, 11]},]
     select_reduction.append(['pca', PCA(), pca_parameters])
 
     kbest_parameters = [
@@ -135,12 +144,14 @@ if __name__ == "__main__":
     select_reduction.append(['kbest', SelectKBest(), kbest_parameters])
 
 
+    ### experiment with 4 models
+    ### choose several values for hyperparameter optimization.
     candidates = []
 
     ### Logistic Regression
     lr_parameters = [
         {'clf__C': [1, 3, 5]},
-        {'clf__n_jobs':[1,3,5,7]},]
+        {'clf__n_jobs':[1, 3, 5, 7]},]
     candidates.append(['lr', LogisticRegression(), lr_parameters])
 
     ### SVC
@@ -162,23 +173,41 @@ if __name__ == "__main__":
         {'clf__n_jobs':[1, 3, 5, 7, 9]},]
     candidates.append(['kNN', KNeighborsClassifier(), knn_parameters])
 
+
+    log_cols=["Classifier", "Reducer", "Estimator", "Params", "Score"]
+    log = pd.DataFrame(columns=log_cols)
+    pd.set_option('max_colwidth', 2000)
+
     for name, model, parameters in candidates:
         for r_name, r_model, r_parameters in select_reduction:
-            print (name + r_name)
-            pipe = Pipeline([('scalers', scalers), ('reducers', r_model), ('clf', model)])
+            paramgrid = parameters + r_parameters
+            pipe = Pipeline(steps = [('scalers', scalers), ('reducers', r_model), ('clf', model)])
 
-            grid = GridSearchCV(pipe, cv = 7, verbose = 5, scoring='f1', n_jobs = 7, param_grid = parameters + r_parameters)
+            grid = GridSearchCV(pipe, cv = 7, verbose = 5, scoring='f1', n_jobs = 7, param_grid=paramgrid)
 
             clf = grid.fit(features_train, labels_train)
-            predictions = clf.predict(features_test)
 
-            # show the accuracy
-            accuracy = metrics.accuracy_score(labels_test, predictions)
-            print(accuracy)
+            log_entry = pd.DataFrame([[name, r_name, clf.best_estimator_, clf.best_params_, clf.best_score_]], columns=log_cols)
+            log = log.append(log_entry)
+
+    ### Try various models is complete ###
+    
+    ### Final model is defined here!
+    ### Using gridsearchcv we observe that 3 principle 
+    ### components are the optimal setting
+    pca_parameters = [
+        {'reducers__n_components': [3]},]
+
+    pipe = Pipeline([('scalers', RobustScaler()), \
+                     ('reducers', PCA(n_components=3)), \
+                     ('clf', KNeighborsClassifier(n_neighbors=1, n_jobs=1))])
+    
+    grid = GridSearchCV(pipe, scoring='f1', param_grid = pca_parameters)
+    clf_final = grid.fit(features_train, labels_train)
 
     ### test the classifier
-    test_classifier(clf.best_estimator_, my_dataset, features_list)
+    test_classifier(clf_final.best_estimator_, my_dataset, features_list)
 
     ### export results
-    dump_classifier_and_data(clf.best_estimator_, my_dataset, features_list)
+    dump_classifier_and_data(clf_final.best_estimator_, my_dataset, features_list)
     
