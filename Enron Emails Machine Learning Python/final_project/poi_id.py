@@ -191,8 +191,11 @@ if __name__ == "__main__":
             log = log.append(log_entry)
 
     ### Try various models is complete ###
+    ### Look at the log
+    print(log.sort_values(by='Score', ascending=False).head(1))
     
     ### Final model is defined here!
+    ### Focus on one of the best models
     ### Using gridsearchcv we observe that 3 principle 
     ### components are the optimal setting
     pca_parameters = [

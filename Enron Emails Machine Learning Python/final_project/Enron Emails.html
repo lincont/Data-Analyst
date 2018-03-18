@@ -17338,19 +17338,19 @@ RU5ErkJggg==
       <th>0</th>
       <td>SVC</td>
       <td>90.697674</td>
-      <td>0.320087</td>
+      <td>0.314360</td>
     </tr>
     <tr>
       <th>0</th>
       <td>DecisionTreeClassifier</td>
-      <td>86.046512</td>
-      <td>4.819364</td>
+      <td>83.720930</td>
+      <td>5.622592</td>
     </tr>
     <tr>
       <th>0</th>
       <td>RandomForestClassifier</td>
-      <td>86.046512</td>
-      <td>0.325347</td>
+      <td>95.348837</td>
+      <td>0.253441</td>
     </tr>
     <tr>
       <th>0</th>
@@ -18099,19 +18099,19 @@ RU5ErkJggg==
       <th>0</th>
       <td>SVC</td>
       <td>90.697674</td>
-      <td>0.317721</td>
+      <td>0.318700</td>
     </tr>
     <tr>
       <th>0</th>
       <td>DecisionTreeClassifier</td>
-      <td>76.744186</td>
-      <td>8.032274</td>
+      <td>79.069767</td>
+      <td>7.229046</td>
     </tr>
     <tr>
       <th>0</th>
       <td>RandomForestClassifier</td>
-      <td>93.023256</td>
-      <td>0.247972</td>
+      <td>88.372093</td>
+      <td>0.288795</td>
     </tr>
     <tr>
       <th>0</th>
@@ -18283,7 +18283,8 @@ RU5ErkJggg==
  'from_this_person_to_poi',
  'from_poi_to_this_person']</p>
 <p>We use Kbest as an example of univariate feature selection and PCA as another method of dimensionality reduction in the next pass of model selection and tuning.</p>
-<p>PCA outperforms and is a good choice to reduce dimensionality of our features with a minimal loss of information.</p>
+<p>Our GridSearchCV will tune our parameters and find the best number of dimensions.  It works by refitting an N and N-1 dimension space while maintaining the most variance.</p>
+<p>SelectKbest works by scoring each feature for its predictive power than selecting the best performing number of them.</p>
 
 </div>
 </div>
@@ -18317,7 +18318,7 @@ RU5ErkJggg==
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>In machine learning, model validation is the process where a trained model is evaluated with a teating data set.  The data for testing is taken from a partition of the same dataset that trained the model.  In machine learning, it is best practice to split our dataset into a train and test section.  This allows us to test for overfitting which means the predictions would work extremely well for the training set but not for the testing set - the model would not do a good job of generalizing it's predictions.</p>
+<p>In machine learning, model validation is the process where a trained model is evaluated with a teating data set.  The data for testing is taken from a partition of the same dataset that trained the model.  In machine learning, it is best practice to split our dataset into a train and test section.  This allows us to test for overfitting which means the predictions would work extremely well for the training set but not for the testing set - the model would do a poor job of generalizing it's predictions.</p>
 <p>We use train test split to create random partitions of the data.</p>
 
 </div>
@@ -18336,11 +18337,11 @@ RU5ErkJggg==
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p>The small number of POIs, ~12.5% will cause a class imbalance issue.  Most machine learning algorithms will perform best when the value we're trying to predict is more or less equal.  When evaluating a model with imbalanced data, it's important to consider the rate of the mistakes or in other words false negatives and false positives.  For this reason, we use precision and recall to evaluate the model.  High precision could be too generous and classify too many people as POIs, high recall could be too restrictive and miss the POIs.</p>
-<p>Precision is the rate of the correctly predicted positives to all positive observations or in other words out of all the items classified as positive, how many are truly positive.</p>
+<p>Precision is the rate of the correctly predicted POIs to all POI guesses.  In other words, the alogorithm guesses that someone is a POI, how certain are we that this is truly a POI -- what is the quality of these guesses.</p>
 <p>\begin{equation*}
 \mathbf precision = \frac{true \space positive}{true \space positive + false \space positive}
 \end{equation*}</p>
-<p>Recall (or sensitivity) is the rate of correctly predicted positives or in other words of the items classified as positive, how many were correctly classified.</p>
+<p>Recall (or sensitivity) is the rate of correctly predicted POIs to all guesses that should have been POIs.  In other words the algorithm guesses that someone is a POI, how many of the real POIs did we fine -- what is the completeness of our predictions.</p>
 <p>\begin{equation*}
 \mathbf recall = \frac{true \space positive}{true \space positive + false \space negative}
 \end{equation*}</p>
@@ -18442,7 +18443,7 @@ RU5ErkJggg==
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[60]:</div>
+<div class="prompt input_prompt">In&nbsp;[69]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="c1">### Extract features and labels from dataset for local testing</span>
@@ -18457,7 +18458,7 @@ RU5ErkJggg==
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[61]:</div>
+<div class="prompt input_prompt">In&nbsp;[70]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="c1">### Tried no random_state and test size = .33, 30, .2, .25</span>
@@ -18474,10 +18475,10 @@ RU5ErkJggg==
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[66]:</div>
+<div class="prompt input_prompt">In&nbsp;[71]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="c1">### Try various models</span>
+<div class=" highlight hl-ipython2"><pre><span></span><span class="c1">### Build the paramater grid for the various options</span>
 
 <span class="c1">### RobustScaler is used as a normalization method</span>
 <span class="c1">### Each of the features have different units</span>
@@ -18502,6 +18503,8 @@ RU5ErkJggg==
 
 <span class="c1">### experiment with 4 models</span>
 <span class="c1">### choose several values for hyperparameter optimization.</span>
+<span class="c1">### these four classifiers were chosen because they </span>
+<span class="c1">### performed the best using generic settings</span>
 <span class="n">candidates</span> <span class="o">=</span> <span class="p">[]</span>
 
 <span class="c1">### Logistic Regression</span>
@@ -18528,10 +18531,27 @@ RU5ErkJggg==
     <span class="p">{</span><span class="s1">&#39;clf__n_neighbors&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">20</span><span class="p">]},</span>
     <span class="p">{</span><span class="s1">&#39;clf__n_jobs&#39;</span><span class="p">:[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">9</span><span class="p">]},]</span>
 <span class="n">candidates</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="s1">&#39;kNN&#39;</span><span class="p">,</span> <span class="n">KNeighborsClassifier</span><span class="p">(),</span> <span class="n">knn_parameters</span><span class="p">])</span>
+</pre></div>
 
+</div>
+</div>
+</div>
 
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[72]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="c1">###</span>
 <span class="n">log_cols</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Classifier&quot;</span><span class="p">,</span> <span class="s2">&quot;Reducer&quot;</span><span class="p">,</span> <span class="s2">&quot;Estimator&quot;</span><span class="p">,</span> <span class="s2">&quot;Params&quot;</span><span class="p">,</span> <span class="s2">&quot;Score&quot;</span><span class="p">]</span>
 <span class="n">log</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">log_cols</span><span class="p">)</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s1">&#39;max_colwidth&#39;</span><span class="p">,</span> <span class="mi">2000</span><span class="p">)</span>
+
+<span class="n">gridsearch_cols</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Classifier&quot;</span><span class="p">,</span> <span class="s2">&quot;Reducer&quot;</span><span class="p">,</span> <span class="s2">&quot;Rank_Test_Score&quot;</span><span class="p">,</span> <span class="s2">&quot;Params&quot;</span><span class="p">,</span> 
+                 <span class="s2">&quot;Mean_Test_Score&quot;</span><span class="p">,</span> <span class="s2">&quot;Std_Test_Score&quot;</span><span class="p">,</span>
+                 <span class="s2">&quot;Mean_Train_Score&quot;</span><span class="p">,</span> <span class="s2">&quot;Std_Train_Score&quot;</span><span class="p">]</span>
+<span class="n">gridsearch_results</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">gridsearch_cols</span><span class="p">)</span>
 <span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s1">&#39;max_colwidth&#39;</span><span class="p">,</span> <span class="mi">2000</span><span class="p">)</span>
 
 <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">parameters</span> <span class="ow">in</span> <span class="n">candidates</span><span class="p">:</span>
@@ -18543,9 +18563,25 @@ RU5ErkJggg==
     
         <span class="n">clf</span> <span class="o">=</span> <span class="n">grid</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">features_train</span><span class="p">,</span> <span class="n">labels_train</span><span class="p">)</span>
         
+        <span class="c1">### Log the best results here</span>
         <span class="n">log_entry</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([[</span><span class="n">name</span><span class="p">,</span> <span class="n">r_name</span><span class="p">,</span> <span class="n">clf</span><span class="o">.</span><span class="n">best_estimator_</span><span class="p">,</span> <span class="n">clf</span><span class="o">.</span><span class="n">best_params_</span><span class="p">,</span> <span class="n">clf</span><span class="o">.</span><span class="n">best_score_</span><span class="p">]],</span> <span class="n">columns</span><span class="o">=</span><span class="n">log_cols</span><span class="p">)</span>
         <span class="n">log</span> <span class="o">=</span> <span class="n">log</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">log_entry</span><span class="p">)</span>
         
+
+        <span class="c1">### Log all the results here</span>
+        <span class="n">mean_tests</span>  <span class="o">=</span>  <span class="n">clf</span><span class="o">.</span><span class="n">cv_results_</span><span class="p">[</span><span class="s1">&#39;mean_test_score&#39;</span><span class="p">]</span>
+        <span class="n">std_tests</span>   <span class="o">=</span>  <span class="n">clf</span><span class="o">.</span><span class="n">cv_results_</span><span class="p">[</span><span class="s1">&#39;std_test_score&#39;</span><span class="p">]</span>
+        <span class="n">params</span>      <span class="o">=</span>  <span class="n">clf</span><span class="o">.</span><span class="n">cv_results_</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">]</span>
+        <span class="n">mean_trains</span> <span class="o">=</span>  <span class="n">clf</span><span class="o">.</span><span class="n">cv_results_</span><span class="p">[</span><span class="s1">&#39;mean_train_score&#39;</span><span class="p">]</span>
+        <span class="n">std_trains</span>  <span class="o">=</span>  <span class="n">clf</span><span class="o">.</span><span class="n">cv_results_</span><span class="p">[</span><span class="s1">&#39;std_train_score&#39;</span><span class="p">]</span>
+        <span class="n">rank_tests</span>  <span class="o">=</span>  <span class="n">clf</span><span class="o">.</span><span class="n">cv_results_</span><span class="p">[</span><span class="s1">&#39;rank_test_score&#39;</span><span class="p">]</span>
+        
+        <span class="c1">### we make an iterable object with zip</span>
+        <span class="c1">### to parse through each value and put in a dataframe</span>
+        <span class="k">for</span> <span class="n">mean_test</span><span class="p">,</span> <span class="n">std_test</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="n">mean_train</span><span class="p">,</span> <span class="n">std_train</span><span class="p">,</span> <span class="n">rank_test</span> \
+        <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">mean_tests</span><span class="p">,</span> <span class="n">std_tests</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">mean_trains</span><span class="p">,</span> <span class="n">std_trains</span><span class="p">,</span> <span class="n">rank_tests</span><span class="p">):</span>
+            <span class="n">entry</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([[</span><span class="n">name</span><span class="p">,</span> <span class="n">r_name</span><span class="p">,</span> <span class="n">rank_test</span><span class="p">,</span> <span class="n">param</span><span class="p">,</span> <span class="n">mean_test</span><span class="p">,</span> <span class="n">std_test</span><span class="p">,</span> <span class="n">mean_train</span><span class="p">,</span> <span class="n">std_train</span><span class="p">]],</span> <span class="n">columns</span><span class="o">=</span><span class="n">gridsearch_cols</span><span class="p">)</span>
+            <span class="n">gridsearch_results</span> <span class="o">=</span> <span class="n">gridsearch_results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">entry</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -18573,9 +18609,9 @@ RU5ErkJggg==
 
 
 <div class="output_subarea output_stream output_stderr output_text">
-<pre>[Parallel(n_jobs=7)]: Done   4 tasks      | elapsed:    1.6s
-[Parallel(n_jobs=7)]: Done  58 tasks      | elapsed:    3.4s
-[Parallel(n_jobs=7)]: Done  98 out of  98 | elapsed:    4.0s finished
+<pre>[Parallel(n_jobs=7)]: Done   4 tasks      | elapsed:    1.9s
+[Parallel(n_jobs=7)]: Done  58 tasks      | elapsed:    4.0s
+[Parallel(n_jobs=7)]: Done  98 out of  98 | elapsed:    4.7s finished
 </pre>
 </div>
 </div>
@@ -18597,9 +18633,9 @@ RU5ErkJggg==
 
 
 <div class="output_subarea output_stream output_stderr output_text">
-<pre>[Parallel(n_jobs=7)]: Done   4 tasks      | elapsed:    1.5s
-[Parallel(n_jobs=7)]: Done  71 out of  84 | elapsed:    3.1s remaining:    0.5s
-[Parallel(n_jobs=7)]: Done  84 out of  84 | elapsed:    3.1s finished
+<pre>[Parallel(n_jobs=7)]: Done   4 tasks      | elapsed:    1.6s
+[Parallel(n_jobs=7)]: Done  71 out of  84 | elapsed:    3.2s remaining:    0.5s
+[Parallel(n_jobs=7)]: Done  84 out of  84 | elapsed:    3.2s finished
 </pre>
 </div>
 </div>
@@ -18622,8 +18658,8 @@ RU5ErkJggg==
 
 <div class="output_subarea output_stream output_stderr output_text">
 <pre>[Parallel(n_jobs=7)]: Done   4 tasks      | elapsed:    1.7s
-[Parallel(n_jobs=7)]: Done  58 tasks      | elapsed:    3.7s
-[Parallel(n_jobs=7)]: Done  84 out of  84 | elapsed:    4.2s finished
+[Parallel(n_jobs=7)]: Done  58 tasks      | elapsed:    3.4s
+[Parallel(n_jobs=7)]: Done  84 out of  84 | elapsed:    3.8s finished
 </pre>
 </div>
 </div>
@@ -18645,9 +18681,9 @@ RU5ErkJggg==
 
 
 <div class="output_subarea output_stream output_stderr output_text">
-<pre>[Parallel(n_jobs=7)]: Done   4 tasks      | elapsed:    1.3s
-[Parallel(n_jobs=7)]: Done  57 out of  70 | elapsed:    2.7s remaining:    0.5s
-[Parallel(n_jobs=7)]: Done  70 out of  70 | elapsed:    2.8s finished
+<pre>[Parallel(n_jobs=7)]: Done   4 tasks      | elapsed:    1.7s
+[Parallel(n_jobs=7)]: Done  57 out of  70 | elapsed:    3.2s remaining:    0.7s
+[Parallel(n_jobs=7)]: Done  70 out of  70 | elapsed:    3.2s finished
 </pre>
 </div>
 </div>
@@ -18669,9 +18705,9 @@ RU5ErkJggg==
 
 
 <div class="output_subarea output_stream output_stderr output_text">
-<pre>[Parallel(n_jobs=7)]: Done   4 tasks      | elapsed:    2.2s
-[Parallel(n_jobs=7)]: Done  58 tasks      | elapsed:   23.6s
-[Parallel(n_jobs=7)]: Done 126 out of 126 | elapsed:   27.3s finished
+<pre>[Parallel(n_jobs=7)]: Done   4 tasks      | elapsed:    1.8s
+[Parallel(n_jobs=7)]: Done  58 tasks      | elapsed:   22.3s
+[Parallel(n_jobs=7)]: Done 126 out of 126 | elapsed:   25.8s finished
 </pre>
 </div>
 </div>
@@ -18693,9 +18729,9 @@ RU5ErkJggg==
 
 
 <div class="output_subarea output_stream output_stderr output_text">
-<pre>[Parallel(n_jobs=7)]: Done   4 tasks      | elapsed:    1.6s
+<pre>[Parallel(n_jobs=7)]: Done   4 tasks      | elapsed:    1.3s
 [Parallel(n_jobs=7)]: Done  58 tasks      | elapsed:   17.2s
-[Parallel(n_jobs=7)]: Done 112 out of 112 | elapsed:   19.1s finished
+[Parallel(n_jobs=7)]: Done 112 out of 112 | elapsed:   20.9s finished
 </pre>
 </div>
 </div>
@@ -18717,9 +18753,9 @@ RU5ErkJggg==
 
 
 <div class="output_subarea output_stream output_stderr output_text">
-<pre>[Parallel(n_jobs=7)]: Done   4 tasks      | elapsed:    1.9s
-[Parallel(n_jobs=7)]: Done  58 tasks      | elapsed:    4.2s
-[Parallel(n_jobs=7)]: Done 133 out of 133 | elapsed:    6.0s finished
+<pre>[Parallel(n_jobs=7)]: Done   4 tasks      | elapsed:    1.7s
+[Parallel(n_jobs=7)]: Done  58 tasks      | elapsed:    3.7s
+[Parallel(n_jobs=7)]: Done 133 out of 133 | elapsed:    5.2s finished
 </pre>
 </div>
 </div>
@@ -18741,8 +18777,9 @@ RU5ErkJggg==
 
 
 <div class="output_subarea output_stream output_stderr output_text">
-<pre>[Parallel(n_jobs=7)]: Done   4 tasks      | elapsed:    1.3s
-[Parallel(n_jobs=7)]: Done  69 tasks      | elapsed:    3.4s
+<pre>[Parallel(n_jobs=7)]: Done   4 tasks      | elapsed:    1.2s
+[Parallel(n_jobs=7)]: Done  70 tasks      | elapsed:    3.4s
+[Parallel(n_jobs=7)]: Done 106 out of 119 | elapsed:    3.9s remaining:    0.4s
 [Parallel(n_jobs=7)]: Done 119 out of 119 | elapsed:    4.0s finished
 </pre>
 </div>
@@ -18762,11 +18799,10 @@ RU5ErkJggg==
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[68]:</div>
+<div class="prompt input_prompt">In&nbsp;[73]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="k">print</span> <span class="s2">&quot;The best classifier, normalizer, params, score is:&quot;</span>
-<span class="n">log</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s1">&#39;Score&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">log</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s1">&#39;Score&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -18779,18 +18815,7 @@ RU5ErkJggg==
 
 <div class="output_area">
 
-<div class="prompt"></div>
-
-
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>The best classifier, normalizer, params, score is:
-</pre>
-</div>
-</div>
-
-<div class="output_area">
-
-<div class="prompt output_prompt">Out[68]:</div>
+<div class="prompt output_prompt">Out[73]:</div>
 
 
 
@@ -18816,6 +18841,309 @@ RU5ErkJggg==
       <td>{u'reducers__n_components': 3}</td>
       <td>0.265957</td>
     </tr>
+    <tr>
+      <th>0</th>
+      <td>RandomForest</td>
+      <td>kbest</td>
+      <td>Pipeline(memory=None,\n     steps=[('scalers', RobustScaler(copy=True, quantile_range=(25.0, 75.0), with_centering=True,\n       with_scaling=True)), ('reducers', SelectKBest(k=3, score_func=&lt;function f_classif at 0x000000000C77B9E8&gt;)), ('clf', RandomForestClassifier(bootstrap=True, class_weight=None, criterion='gini',\n        ...n_jobs=1,\n            oob_score=False, random_state=None, verbose=0,\n            warm_start=False))])</td>
+      <td>{u'reducers__k': 3}</td>
+      <td>0.242908</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>RandomForest</td>
+      <td>pca</td>
+      <td>Pipeline(memory=None,\n     steps=[('scalers', RobustScaler(copy=True, quantile_range=(25.0, 75.0), with_centering=True,\n       with_scaling=True)), ('reducers', PCA(copy=True, iterated_power='auto', n_components=None, random_state=None,\n  svd_solver='auto', tol=0.0, whiten=False)), ('clf', RandomForestClassifier(bootstrap=Tru...n_jobs=1,\n            oob_score=False, random_state=None, verbose=0,\n            warm_start=False))])</td>
+      <td>{u'clf__n_jobs': 1}</td>
+      <td>0.191489</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>KNN with PCA n_components = 3 and RandomForest with kBest k = 3 often trade places for first place.  After running this many times, I believe it's based on how the training and testing data has been split.</p>
+<p>We know we are choosing the right model by using the attributes best estimators, best score, and best parameter.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Look-at-the-variability">Look at the variability<a class="anchor-link" href="#Look-at-the-variability">&#182;</a></h4>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Here we can take a closer look at these two by looking at all the iterations.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[78]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">gridsearch_results</span><span class="p">[(</span><span class="n">gridsearch_results</span><span class="o">.</span><span class="n">Classifier</span> <span class="o">==</span> <span class="s1">&#39;kNN&#39;</span><span class="p">)</span> \
+                 <span class="o">&amp;</span> <span class="p">(</span><span class="n">gridsearch_results</span><span class="o">.</span><span class="n">Reducer</span> <span class="o">==</span> <span class="s1">&#39;pca&#39;</span><span class="p">)]</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt output_prompt">Out[78]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Classifier</th>
+      <th>Reducer</th>
+      <th>Rank_Test_Score</th>
+      <th>Params</th>
+      <th>Mean_Test_Score</th>
+      <th>Std_Test_Score</th>
+      <th>Mean_Train_Score</th>
+      <th>Std_Train_Score</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>kNN</td>
+      <td>pca</td>
+      <td>3.0</td>
+      <td>{u'clf__n_neighbors': 1}</td>
+      <td>0.154255</td>
+      <td>0.259841</td>
+      <td>1.000000</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>kNN</td>
+      <td>pca</td>
+      <td>2.0</td>
+      <td>{u'clf__n_neighbors': 3}</td>
+      <td>0.187234</td>
+      <td>0.341222</td>
+      <td>0.439726</td>
+      <td>0.129245</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>kNN</td>
+      <td>pca</td>
+      <td>4.0</td>
+      <td>{u'clf__n_neighbors': 5}</td>
+      <td>0.127660</td>
+      <td>0.333710</td>
+      <td>0.206541</td>
+      <td>0.119383</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>kNN</td>
+      <td>pca</td>
+      <td>14.0</td>
+      <td>{u'clf__n_neighbors': 7}</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.065934</td>
+      <td>0.076134</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>kNN</td>
+      <td>pca</td>
+      <td>14.0</td>
+      <td>{u'clf__n_neighbors': 10}</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>kNN</td>
+      <td>pca</td>
+      <td>14.0</td>
+      <td>{u'clf__n_neighbors': 11}</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>kNN</td>
+      <td>pca</td>
+      <td>14.0</td>
+      <td>{u'clf__n_neighbors': 20}</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>kNN</td>
+      <td>pca</td>
+      <td>4.0</td>
+      <td>{u'clf__n_jobs': 1}</td>
+      <td>0.127660</td>
+      <td>0.333710</td>
+      <td>0.206541</td>
+      <td>0.119383</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>kNN</td>
+      <td>pca</td>
+      <td>4.0</td>
+      <td>{u'clf__n_jobs': 3}</td>
+      <td>0.127660</td>
+      <td>0.333710</td>
+      <td>0.206541</td>
+      <td>0.119383</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>kNN</td>
+      <td>pca</td>
+      <td>4.0</td>
+      <td>{u'clf__n_jobs': 5}</td>
+      <td>0.127660</td>
+      <td>0.333710</td>
+      <td>0.206541</td>
+      <td>0.119383</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>kNN</td>
+      <td>pca</td>
+      <td>4.0</td>
+      <td>{u'clf__n_jobs': 7}</td>
+      <td>0.127660</td>
+      <td>0.333710</td>
+      <td>0.206541</td>
+      <td>0.119383</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>kNN</td>
+      <td>pca</td>
+      <td>4.0</td>
+      <td>{u'clf__n_jobs': 9}</td>
+      <td>0.127660</td>
+      <td>0.333710</td>
+      <td>0.206541</td>
+      <td>0.119383</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>kNN</td>
+      <td>pca</td>
+      <td>14.0</td>
+      <td>{u'reducers__n_components': 1}</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.072398</td>
+      <td>0.126234</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>kNN</td>
+      <td>pca</td>
+      <td>13.0</td>
+      <td>{u'reducers__n_components': 2}</td>
+      <td>0.092199</td>
+      <td>0.230142</td>
+      <td>0.250968</td>
+      <td>0.169504</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>kNN</td>
+      <td>pca</td>
+      <td>1.0</td>
+      <td>{u'reducers__n_components': 3}</td>
+      <td>0.265957</td>
+      <td>0.355071</td>
+      <td>0.336042</td>
+      <td>0.170540</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>kNN</td>
+      <td>pca</td>
+      <td>4.0</td>
+      <td>{u'reducers__n_components': 4}</td>
+      <td>0.127660</td>
+      <td>0.333710</td>
+      <td>0.208373</td>
+      <td>0.118657</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>kNN</td>
+      <td>pca</td>
+      <td>14.0</td>
+      <td>{u'reducers__n_components': 5}</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.243537</td>
+      <td>0.132906</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>kNN</td>
+      <td>pca</td>
+      <td>4.0</td>
+      <td>{u'reducers__n_components': 7}</td>
+      <td>0.127660</td>
+      <td>0.333710</td>
+      <td>0.238985</td>
+      <td>0.156324</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>kNN</td>
+      <td>pca</td>
+      <td>4.0</td>
+      <td>{u'reducers__n_components': 11}</td>
+      <td>0.127660</td>
+      <td>0.333710</td>
+      <td>0.206541</td>
+      <td>0.119383</td>
+    </tr>
   </tbody>
 </table>
 </div>
@@ -18832,7 +19160,234 @@ RU5ErkJggg==
 <div class="prompt input_prompt">In&nbsp;[80]:</div>
 <div class="inner_cell">
     <div class="input_area">
-<div class=" highlight hl-ipython2"><pre><span></span><span class="c1">### Focus only on the best performing model</span>
+<div class=" highlight hl-ipython2"><pre><span></span><span class="n">gridsearch_results</span><span class="p">[(</span><span class="n">gridsearch_results</span><span class="o">.</span><span class="n">Classifier</span> <span class="o">==</span> <span class="s1">&#39;RandomForest&#39;</span><span class="p">)</span> \
+                 <span class="o">&amp;</span> <span class="p">(</span><span class="n">gridsearch_results</span><span class="o">.</span><span class="n">Reducer</span> <span class="o">==</span> <span class="s1">&#39;kbest&#39;</span><span class="p">)]</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+<div class="prompt output_prompt">Out[80]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Classifier</th>
+      <th>Reducer</th>
+      <th>Rank_Test_Score</th>
+      <th>Params</th>
+      <th>Mean_Test_Score</th>
+      <th>Std_Test_Score</th>
+      <th>Mean_Train_Score</th>
+      <th>Std_Train_Score</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>RandomForest</td>
+      <td>kbest</td>
+      <td>14.0</td>
+      <td>{u'clf__n_estimators': 10}</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.873528</td>
+      <td>0.093707</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>RandomForest</td>
+      <td>kbest</td>
+      <td>6.0</td>
+      <td>{u'clf__n_estimators': 100}</td>
+      <td>0.074468</td>
+      <td>0.178013</td>
+      <td>1.000000</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>RandomForest</td>
+      <td>kbest</td>
+      <td>6.0</td>
+      <td>{u'clf__n_estimators': 250}</td>
+      <td>0.074468</td>
+      <td>0.178013</td>
+      <td>1.000000</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>RandomForest</td>
+      <td>kbest</td>
+      <td>6.0</td>
+      <td>{u'clf__n_estimators': 500}</td>
+      <td>0.074468</td>
+      <td>0.178013</td>
+      <td>1.000000</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>RandomForest</td>
+      <td>kbest</td>
+      <td>6.0</td>
+      <td>{u'clf__n_estimators': 1000}</td>
+      <td>0.074468</td>
+      <td>0.178013</td>
+      <td>1.000000</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>RandomForest</td>
+      <td>kbest</td>
+      <td>14.0</td>
+      <td>{u'clf__criterion': u'gini'}</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.930612</td>
+      <td>0.043929</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>RandomForest</td>
+      <td>kbest</td>
+      <td>6.0</td>
+      <td>{u'clf__criterion': u'entropy'}</td>
+      <td>0.074468</td>
+      <td>0.178013</td>
+      <td>0.898866</td>
+      <td>0.059758</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>RandomForest</td>
+      <td>kbest</td>
+      <td>2.0</td>
+      <td>{u'clf__n_jobs': 1}</td>
+      <td>0.218085</td>
+      <td>0.247955</td>
+      <td>0.931231</td>
+      <td>0.024583</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>RandomForest</td>
+      <td>kbest</td>
+      <td>14.0</td>
+      <td>{u'clf__n_jobs': 3}</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.930354</td>
+      <td>0.047309</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>RandomForest</td>
+      <td>kbest</td>
+      <td>4.0</td>
+      <td>{u'clf__n_jobs': 5}</td>
+      <td>0.127660</td>
+      <td>0.333710</td>
+      <td>0.906499</td>
+      <td>0.046430</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>RandomForest</td>
+      <td>kbest</td>
+      <td>6.0</td>
+      <td>{u'clf__n_jobs': 7}</td>
+      <td>0.074468</td>
+      <td>0.178013</td>
+      <td>0.945428</td>
+      <td>0.040665</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>RandomForest</td>
+      <td>kbest</td>
+      <td>1.0</td>
+      <td>{u'reducers__k': 3}</td>
+      <td>0.242908</td>
+      <td>0.281066</td>
+      <td>0.900103</td>
+      <td>0.054236</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>RandomForest</td>
+      <td>kbest</td>
+      <td>3.0</td>
+      <td>{u'reducers__k': 5}</td>
+      <td>0.134043</td>
+      <td>0.207597</td>
+      <td>0.888885</td>
+      <td>0.048558</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>RandomForest</td>
+      <td>kbest</td>
+      <td>6.0</td>
+      <td>{u'reducers__k': 7}</td>
+      <td>0.074468</td>
+      <td>0.178013</td>
+      <td>0.930416</td>
+      <td>0.053637</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>RandomForest</td>
+      <td>kbest</td>
+      <td>6.0</td>
+      <td>{u'reducers__k': 11}</td>
+      <td>0.074468</td>
+      <td>0.178013</td>
+      <td>0.964626</td>
+      <td>0.043929</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>RandomForest</td>
+      <td>kbest</td>
+      <td>5.0</td>
+      <td>{u'reducers__k': 13}</td>
+      <td>0.099291</td>
+      <td>0.237350</td>
+      <td>0.913426</td>
+      <td>0.078912</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[81]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython2"><pre><span></span><span class="c1">### Focus on one of the best performing model</span>
 
 <span class="c1">### Using gridsearchcv we observe that 3 principle </span>
 <span class="c1">### components are the optimal setting</span>
@@ -18906,7 +19461,7 @@ RU5ErkJggg==
 <p>Designing the features seemed challenging and I think the better the data is cleansed or the better the feature design is, the better the predictions would be.  Feature design seems like an artform.  In the future, I'd like to experiment with with catagorical features or dummy boolean columns I read about on civis analytics.</p>
 <p>This project didn't explore any of the natural language processing tools.  I would also like to make an offshoot project to explore the actual email contents and the NLP sklearn packages.</p>
 <p>I learned a lot with this project and was surprised how easy (only a few lines of code) to train and test a model.  The sklearn toolkit makes it very easy to get started.  The real work is in designing the features, choosing the algorithm, and tuning it.  Although there are flow charts and examples of what to choose and tools like gridseachcv, I feel developers must also use intuition, domain knowledge, and common sense.</p>
-<p>Initially I had placed the log.append statement outside of the for loops and had inaccurately concluded that KNN and Kbest with k=10 was the best predictor.  Once I moved this statement to the right place I was able to</p>
+<p>Initially I had placed the log.append statement outside of the for loops and had inaccurately concluded that KNN and Kbest with k=10 was the best predictor.  Once I moved this statement to the right place I was able to see that the best predictors would switch between RandomForest with kBest or KNN with PCA.</p>
 
 </div>
 </div>
@@ -18925,6 +19480,7 @@ RU5ErkJggg==
 <li><a href="http://www.dataschool.io/simple-guide-to-confusion-matrix-terminology/">http://www.dataschool.io/simple-guide-to-confusion-matrix-terminology/</a></li>
 <li><a href="https://www.kaggle.com/jeffd23/10-classifier-showdown-in-scikit-learn">https://www.kaggle.com/jeffd23/10-classifier-showdown-in-scikit-learn</a></li>
 <li><a href="https://link.springer.com/referenceworkentry/10.1007%2F978-1-4419-9863-7_233">https://link.springer.com/referenceworkentry/10.1007%2F978-1-4419-9863-7_233</a></li>
+<li><a href="http://scikit-learn.org/stable/auto_examples/model_selection/plot_grid_search_digits.html">http://scikit-learn.org/stable/auto_examples/model_selection/plot_grid_search_digits.html</a></li>
 </ul>
 
 </div>
